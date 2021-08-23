@@ -38,11 +38,9 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.Pengguna;
-import model.Soal;
+import model.Kuis;
 import okhttp3.ResponseBody;
-import response.PenggunaResponse;
-import response.SoalResponse;
+import response.KuisResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +50,7 @@ import retrofit2.Response;
  *
  * @author gabri
  */
-public class Kelola_SoalController implements Initializable {
+public class Kelola_KuisController implements Initializable {
     
      @FXML
     private Label lbOut;
@@ -73,40 +71,40 @@ public class Kelola_SoalController implements Initializable {
     private Button btnKuis;
 
     @FXML
-    private TableView<Soal> tableSoal;
+    private TableView<Kuis> tableKuis;
 
     @FXML
-    private TableColumn<Soal, Integer> col_id;
+    private TableColumn<Kuis, Integer> col_id;
 
     @FXML
-    private TableColumn<Soal, String> col_kodeKuis;
+    private TableColumn<Kuis, String> col_kodeKuis;
 
     @FXML
-    private TableColumn<Soal, String> col_kodeTipe;
+    private TableColumn<Kuis, String> col_namaKuis;
 
     @FXML
-    private TableColumn<Soal, String> col_Soal;
+    private TableColumn<Kuis, String> col_matakuliah;
 
     @FXML
-    private TableColumn<Soal, String> col_bobotSoal;
+    private TableColumn<Kuis, String> col_infoKuis;
 
     @FXML
-    private TableColumn<Soal, String> col_levelSoal;
+    private TableColumn<Kuis, String> col_durasi;
 
     @FXML
     private TextField tf_kodeKuis;
 
     @FXML
-    private TextField tf_kodeTipe;
+    private TextField tf_namaKuis;
 
     @FXML
-    private TextField tf_soal;
+    private TextField tf_matakuliah;
 
     @FXML
-    private TextField tf_bobotSoal;
+    private TextField tf_infoKuis;
 
     @FXML
-    private TextField tf_levelSoal;
+    private TextField tf_durasi;
 
     @FXML
     private Button btnTambah;
@@ -119,8 +117,9 @@ public class Kelola_SoalController implements Initializable {
 
     @FXML
     private Button btnReset;
-
-      ObservableList<Soal> observableList=FXCollections.observableArrayList();
+    
+    
+     ObservableList<Kuis> observableList=FXCollections.observableArrayList();
     
     
     @FXML
@@ -153,6 +152,16 @@ public class Kelola_SoalController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
+    @FXML
+    void onClickSoal(ActionEvent event) throws IOException {
+        FXMLLoader pindah3=new FXMLLoader(getClass().getResource("/tampilan/Kelola_Soal.fxml"));
+        Parent root=pindah3.load();
+        Stage stage=(Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene scene=new Scene(root);    
+        stage.setScene(scene);
+        stage.show();
+    } 
     
         @FXML
     void onClickAbout(ActionEvent event) throws IOException {
@@ -163,16 +172,6 @@ public class Kelola_SoalController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
-    @FXML
-    void onClickSoal(ActionEvent event) throws IOException {
-        FXMLLoader pindah3=new FXMLLoader(getClass().getResource("/tampilan/Kelola_Soal.fxml"));
-        Parent root=pindah3.load();
-        Stage stage=(Stage)((Node)event.getSource()).getScene().getWindow();
-        Scene scene=new Scene(root);    
-        stage.setScene(scene);
-        stage.show();
-    }    
     
     @FXML
     void menuExitClick(MouseEvent event) throws IOException {
@@ -222,31 +221,31 @@ public class Kelola_SoalController implements Initializable {
       } 
     }
 
-    public void tampilSoal(){
+    public void tampilKuis(){
         Api api=RetrofitClient.getRetrofit().create(Api.class);
         
-        Call<SoalResponse> call=api.allSoal();
-        call.enqueue(new Callback<SoalResponse>(){
+        Call<KuisResponse> call=api.allKuis();
+        call.enqueue(new Callback<KuisResponse>(){
             @Override
-            public void onResponse(Call<SoalResponse> call, Response<SoalResponse> response) {
+            public void onResponse(Call<KuisResponse> call, Response<KuisResponse> response) {
                 if(response.isSuccessful()){
-                    int size=response.body().getSoal().size();
-                    List<Soal> listSoal=response.body().getSoal();
+                    int size=response.body().getKuis().size();
+                    List<Kuis> listKuis=response.body().getKuis();
                     
                     for(int i=0; i<size; i++){
                       
-                        observableList.add(new Soal(listSoal.get(i).getId(), listSoal.get(i).getKode_kuis(), listSoal.get(i).getKode_tipe(), listSoal.get(i).getSoal(), listSoal.get(i).getBobot_soal(), listSoal.get(i).getLevel_soal()));
-                        
+                        observableList.add(new Kuis(listKuis.get(i).getId(), listKuis.get(i).getKode_kuis(), listKuis.get(i).getNama_kuis(), listKuis.get(i).getMatakuliah(), listKuis.get(i).getInfo_kuis(), listKuis.get(i).getDurasi()));
+                           
                     }
                     
                     col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
                     col_kodeKuis.setCellValueFactory(new PropertyValueFactory<>("kode_kuis"));
-                    col_kodeTipe.setCellValueFactory(new PropertyValueFactory<>("kode_tipe"));
-                    col_Soal.setCellValueFactory(new PropertyValueFactory<>("soal"));
-                    col_bobotSoal.setCellValueFactory(new PropertyValueFactory<>("bobot_soal"));
-                    col_levelSoal.setCellValueFactory(new PropertyValueFactory<>("level_soal"));
+                    col_namaKuis.setCellValueFactory(new PropertyValueFactory<>("nama_kuis"));
+                    col_matakuliah.setCellValueFactory(new PropertyValueFactory<>("matakuliah"));
+                    col_infoKuis.setCellValueFactory(new PropertyValueFactory<>("info_kuis"));
+                    col_durasi.setCellValueFactory(new PropertyValueFactory<>("durasi"));
                    
-                    tableSoal.setItems(observableList);
+                    tableKuis.setItems(observableList);
                 }
                 else{
                     System.out.println(response.message());
@@ -254,7 +253,7 @@ public class Kelola_SoalController implements Initializable {
             }
 
             @Override
-            public void onFailure(Call<SoalResponse> call, Throwable thrwbl) {
+            public void onFailure(Call<KuisResponse> call, Throwable thrwbl) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
             
@@ -264,10 +263,10 @@ public class Kelola_SoalController implements Initializable {
     @FXML
     void onClickButtonReset(ActionEvent event) {
         tf_kodeKuis.setText("");
-        tf_kodeTipe.setText("");
-        tf_soal.setText("");
-        tf_bobotSoal.setText("");
-        tf_levelSoal.setText("");
+        tf_namaKuis.setText("");
+        tf_matakuliah.setText("");
+        tf_infoKuis.setText("");
+        tf_durasi.setText("");
 
     }
 
@@ -276,20 +275,20 @@ public class Kelola_SoalController implements Initializable {
         Preferences preferences=Preferences.userRoot();
         
         String kodeKuis=tf_kodeKuis.getText().toString();
-        String kodeTipe=tf_kodeTipe.getText().toString();
-        String soal=tf_soal.getText().toString();
-        String bobotSoal=tf_bobotSoal.getText().toString();
-        String levelSoal=tf_levelSoal.getText().toString();
+        String namaKuis=tf_namaKuis.getText().toString();
+        String matakuliah=tf_matakuliah.getText().toString();
+        String infoKuis=tf_infoKuis.getText().toString();
+        String durasi=tf_durasi.getText().toString();
         
         Api api=RetrofitClient.getRetrofit().create(Api.class);
-        api.createSoal(kodeKuis, kodeTipe, soal, bobotSoal, levelSoal).enqueue(new Callback<ResponseBody>() {
+        api.createKuis(kodeKuis, namaKuis, matakuliah, infoKuis, durasi).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     Platform.runLater(() -> {   
                     try{
-                        FXMLLoader pindahSoal = new FXMLLoader(getClass().getResource("/tampilan/Kelola_Soal.fxml"));
-                        Parent parents = pindahSoal.load();
+                        FXMLLoader pindaKuis = new FXMLLoader(getClass().getResource("/tampilan/Kelola_Kuis.fxml"));
+                        Parent parents = pindaKuis.load();
                         Scene scene = new Scene(parents);
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stage.setScene(scene);
@@ -318,26 +317,26 @@ public class Kelola_SoalController implements Initializable {
 
     @FXML
     void onClickButtonUpdate(ActionEvent event) {
-        if(tableSoal.getSelectionModel().getSelectedItem()!=null){
-           Soal listSoal = tableSoal.getSelectionModel().getSelectedItem();
+        if(tableKuis.getSelectionModel().getSelectedItem()!=null){
+           Kuis listKuis = tableKuis.getSelectionModel().getSelectedItem();
             
             Preferences preferences = Preferences.userRoot(); 
-            preferences.putInt("id",listSoal.getId());
-            preferences.put("kode_kuis",listSoal.getKode_kuis());
-            preferences.put("kode_tipe",listSoal.getKode_tipe());
-            preferences.put("soal",listSoal.getSoal());
-            preferences.put("bobot_soal",listSoal.getBobot_soal());
-            preferences.put("level_soal",listSoal.getLevel_soal());
+            preferences.putInt("id",listKuis.getId());
+            preferences.put("kode_kuis",listKuis.getKode_kuis());
+            preferences.put("nama_kuis",listKuis.getNama_kuis());
+            preferences.put("matakuliah",listKuis.getMatakuliah());
+            preferences.put("info_kuis",listKuis.getInfo_kuis());
+            preferences.put("durasi",listKuis.getDurasi());
             
             try{
-                FXMLLoader pinda11 = new FXMLLoader(getClass().getResource("/tampilan/Edit_Soal.fxml"));
-                Parent parent1 = pinda11.load();
+                FXMLLoader pindahEditKuis = new FXMLLoader(getClass().getResource("/tampilan/Edit_Kuis.fxml"));
+                Parent parent1 = pindahEditKuis.load();
 
                 Scene scene = new Scene(parent1);
-                Stage myStage1 = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                myStage1.setScene(scene);
-                myStage1.centerOnScreen();
-                myStage1.show();
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.centerOnScreen();
+                stage.show();
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -349,25 +348,25 @@ public class Kelola_SoalController implements Initializable {
            
     @FXML
     void onClickButtonDelete(ActionEvent event) {
-            if(tableSoal.getSelectionModel().getSelectedItem()!= null){
-            Soal preferences = tableSoal.getSelectionModel().getSelectedItem();
+            if(tableKuis.getSelectionModel().getSelectedItem()!= null){
+            Kuis preferences = tableKuis.getSelectionModel().getSelectedItem();
             System.out.println(preferences.getKode_kuis());
             Api api = RetrofitClient.getRetrofit().create(Api.class);
             
-            api.deleteSoal(preferences.getId()).enqueue(new Callback<ResponseBody>(){
+            api.deleteKuis(preferences.getId()).enqueue(new Callback<ResponseBody>(){
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if(response.isSuccessful()){
                             Platform.runLater(() -> {
                                 try{
-                                    FXMLLoader pinda = new FXMLLoader(getClass().getResource("/tampilan/Kelola_Soal.fxml"));
-                                    Parent parent1 = pinda.load();
+                                    FXMLLoader pindahKuis = new FXMLLoader(getClass().getResource("/tampilan/Kelola_Kuis.fxml"));
+                                    Parent parent1 = pindahKuis.load();
 
-                                    Scene x = new Scene(parent1);
-                                    Stage myStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                                    myStage.setScene(x);
-                                    myStage.centerOnScreen();
-                                    myStage.show();
+                                    Scene scene = new Scene(parent1);
+                                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                                    stage.setScene(scene);
+                                    stage.centerOnScreen();
+                                    stage.show();
                                 }catch(Exception e){
                                     e.printStackTrace();
                                 }
@@ -386,15 +385,14 @@ public class Kelola_SoalController implements Initializable {
         }
     }
 
- 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       Preferences soalPreferences = Preferences.userRoot();
-        String soal= soalPreferences.get("email",null);
-        tampilSoal();
+        Preferences kuisPreferences = Preferences.userRoot();
+        String kuis = kuisPreferences.get("email",null);
+        tampilKuis();
     }    
     
 }
